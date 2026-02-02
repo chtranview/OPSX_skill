@@ -1,0 +1,14 @@
+C:\Users\user\.vscode\workspace\ungzip_and_zip\bin\Release\net8.0\win-x64\ungzip_and_zip.exe
+C:\Users\user\.vscode\workspace\ungzip_and_zip\bin\Release\net8.0\win-x64\ungzip_and_zip.deps.json
+C:\Users\user\.vscode\workspace\ungzip_and_zip\bin\Release\net8.0\win-x64\ungzip_and_zip.runtimeconfig.json
+C:\Users\user\.vscode\workspace\ungzip_and_zip\bin\Release\net8.0\win-x64\ungzip_and_zip.dll
+C:\Users\user\.vscode\workspace\ungzip_and_zip\bin\Release\net8.0\win-x64\ungzip_and_zip.pdb
+C:\Users\user\.vscode\workspace\ungzip_and_zip\obj\Release\net8.0\win-x64\ungzip_and_zip.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\user\.vscode\workspace\ungzip_and_zip\obj\Release\net8.0\win-x64\ungzip_and_zip.AssemblyInfoInputs.cache
+C:\Users\user\.vscode\workspace\ungzip_and_zip\obj\Release\net8.0\win-x64\ungzip_and_zip.AssemblyInfo.cs
+C:\Users\user\.vscode\workspace\ungzip_and_zip\obj\Release\net8.0\win-x64\ungzip_and_zip.csproj.CoreCompileInputs.cache
+C:\Users\user\.vscode\workspace\ungzip_and_zip\obj\Release\net8.0\win-x64\ungzip_and_zip.dll
+C:\Users\user\.vscode\workspace\ungzip_and_zip\obj\Release\net8.0\win-x64\refint\ungzip_and_zip.dll
+C:\Users\user\.vscode\workspace\ungzip_and_zip\obj\Release\net8.0\win-x64\ungzip_and_zip.pdb
+C:\Users\user\.vscode\workspace\ungzip_and_zip\obj\Release\net8.0\win-x64\ungzip_and_zip.genruntimeconfig.cache
+C:\Users\user\.vscode\workspace\ungzip_and_zip\obj\Release\net8.0\win-x64\ref\ungzip_and_zip.dll

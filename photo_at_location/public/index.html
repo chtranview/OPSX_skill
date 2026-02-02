@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Photo at Location - Gemini 2.0 Flash</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+      #map { height: 400px; margin-top: 8px; border: 1px solid #ccc; border-radius: 8px; }
+      .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+      h1 { color: #333; }
+      .controls { background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0; }
+      .controls label { display: block; margin: 10px 0; }
+      .controls input[type="text"], .controls input[type="password"] { 
+        width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;
+      }
+      button { 
+        background: #4285f4; color: white; padding: 12px 24px; 
+        border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin: 5px 0;
+      }
+      button:hover { background: #3367d6; }
+      button:disabled { background: #ccc; cursor: not-allowed; }
+      #canvas { border: 1px solid #ccc; border-radius: 8px; max-width: 100%; }
+      #status { margin-top: 10px; padding: 10px; border-radius: 4px; }
+      .success { background: #d4edda; color: #155724; }
+      .error { background: #f8d7da; color: #721c24; }
+      .loading { background: #fff3cd; color: #856404; }
+      .api-info { background: #e7f3ff; padding: 15px; border-radius: 8px; margin: 15px 0; font-size: 0.9em; }
+      .api-info a { color: #0066cc; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🌍 AI 旅遊照片生成器（Gemini 2.0 Flash）</h1>
+      <p>使用 <strong>Google Gemini 2.0 Flash</strong> 根據上傳照片生成相似人物的旅遊照片</p>
+
+      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 8px;">
+        <button id="initMap">📍 載入地圖</button>
+        <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 300px;">
+          <strong style="white-space: nowrap;">🔍 搜尋景點：</strong>
+          <input type="text" id="locationSearch" placeholder="巴黎鐵塔、東京晴空塔、紐約自由女神..." style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
+          <button type="button" id="searchLocation" style="white-space: nowrap;">🔍 搜尋</button>
+        </div>
+      </div>
+      <div id="map"></div>
+
+      <div class="controls">
+        <div class="api-info">
+          <strong>🔑 Gemini API Key：</strong>
+          <a href="https://aistudio.google.com/" target="_blank">Google AI Studio</a> → Get API Key（免費）
+        </div>
+
+        <label>
+          <strong>Gemini API Key：</strong>
+          <input type="password" id="apiKey" placeholder="AIza..." />
+        </label>
+
+        <label>
+          <strong>上傳你的照片（臉部清晰、正面）：</strong>
+          <input id="photo" type="file" accept="image/*" />
+        </label>
+
+        <p id="locationInfo" style="color: #666;">📍 點擊地圖選擇目的地</p>
+
+        <button id="generate">🎨 產生 4K 旅遊照片</button>
+      </div>
+
+      <h3>結果預覽</h3>
+      <canvas id="canvas" width="960" height="540"></canvas>
+      <div id="status"></div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/app.js"></script>
+  </body>
+</html>

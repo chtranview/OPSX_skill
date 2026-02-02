@@ -1,0 +1,5 @@
+C:\Users\user\.vscode\workspace\unzip_and_gzip\bin\Release\net8.0\publish\unzip_and_gzip.exe
+C:\Users\user\.vscode\workspace\unzip_and_gzip\bin\Release\net8.0\publish\unzip_and_gzip.dll
+C:\Users\user\.vscode\workspace\unzip_and_gzip\bin\Release\net8.0\publish\unzip_and_gzip.deps.json
+C:\Users\user\.vscode\workspace\unzip_and_gzip\bin\Release\net8.0\publish\unzip_and_gzip.runtimeconfig.json
+C:\Users\user\.vscode\workspace\unzip_and_gzip\bin\Release\net8.0\publish\unzip_and_gzip.pdb

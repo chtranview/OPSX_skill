@@ -1,0 +1,253 @@
+@{
+    ViewData["Title"] = "資料收集管理";
+    var isRunning = (bool)(ViewBag.IsRunning ?? false);
+    var sessionId = (Guid)(ViewBag.SessionId ?? Guid.Empty);
+    var startTime = (DateTime?)(ViewBag.StartTime);
+    var recordCount = (int)(ViewBag.RecordCount ?? 0);
+    var selectedAreas = (IReadOnlyList<string>)(ViewBag.SelectedAreas ?? Array.Empty<string>());
+    var durationSeconds = (int)(ViewBag.DurationSeconds ?? 0);
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">
+        <i class="bi bi-database"></i> YouBike 資料收集管理
+    </h2>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Message"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- 狀態卡片 -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">收集狀態</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <strong>執行狀態：</strong>
+                    <span id="statusBadge" class="badge @(isRunning ? "bg-success" : "bg-secondary")">
+                        @(isRunning ? "執行中" : "已停止")
+                    </span>
+                </div>
+                <div class="col-md-3">
+                    <strong>Session ID：</strong>
+                    <small id="sessionIdDisplay" class="text-muted">@(sessionId != Guid.Empty ? sessionId.ToString("N").Substring(0, 8) : "無")</small>
+                </div>
+                <div class="col-md-3">
+                    <strong>開始時間：</strong>
+                    <span id="startTimeDisplay">@(startTime?.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss") ?? "未啟動")</span>
+                </div>
+                <div class="col-md-3">
+                    <strong>已收集筆數：</strong>
+                    <span id="recordCountDisplay" class="badge bg-info text-dark">@recordCount.ToString("N0")</span>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-3">
+                    <strong>已收集時間：</strong>
+                    <span id="durationDisplay">@durationSeconds 秒</span>
+                </div>
+            </div>
+
+            @if (selectedAreas.Count > 0)
+            {
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <strong>選定行政區：</strong>
+                        <span id="selectedAreasDisplay">@string.Join(", ", selectedAreas)</span>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- 控制卡片 -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">收集控制</h5>
+        </div>
+        <div class="card-body">
+            @if (!isRunning)
+            {
+                <form method="post" asp-action="Start" class="row g-3">
+                    <div class="col-md-8">
+                        <label for="areas" class="form-label">選擇行政區（可多選，留空則收集全部）：</label>
+                        <select id="areas" name="areas" class="form-select" multiple size="5">
+                            <option value="中正區">中正區</option>
+                            <option value="大同區">大同區</option>
+                            <option value="中山區">中山區</option>
+                            <option value="松山區">松山區</option>
+                            <option value="大安區">大安區</option>
+                            <option value="萬華區">萬華區</option>
+                            <option value="信義區">信義區</option>
+                            <option value="士林區">士林區</option>
+                            <option value="北投區">北投區</option>
+                            <option value="內湖區">內湖區</option>
+                            <option value="南港區">南港區</option>
+                            <option value="文山區">文山區</option>
+                        </select>
+                        <div class="form-text">按住 Ctrl（Windows）或 Command（Mac）可多選</div>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="submit" class="btn btn-success btn-lg w-100">
+                            <i class="bi bi-play-circle"></i> 啟動收集
+                        </button>
+                    </div>
+                </form>
+            }
+            else
+            {
+                <form method="post" asp-action="Stop">
+                    <button type="submit" class="btn btn-danger btn-lg">
+                        <i class="bi bi-stop-circle"></i> 停止收集
+                    </button>
+                </form>
+            }
+        </div>
+    </div>
+
+    <!-- 匯出卡片 -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">資料匯出</h5>
+        </div>
+        <div class="card-body">
+            @if (sessionId != Guid.Empty && !isRunning && recordCount > 0)
+            {
+                <form method="get" asp-action="ExportCsv" id="exportForm" class="row g-3">
+                    <div class="col-md-8">
+                        <label for="exportAreas" class="form-label">篩選行政區（可多選，留空則匯出全部）：</label>
+                        <select id="exportAreas" name="areas" class="form-select" multiple size="5">
+                            <!-- 動態填充 -->
+                        </select>
+                        <div class="form-text">按住 Ctrl（Windows）或 Command（Mac）可多選</div>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            <i class="bi bi-download"></i> 下載 CSV
+                        </button>
+                    </div>
+                </form>
+            }
+            else
+            {
+                <div class="alert alert-info mb-0">
+                    @if (isRunning)
+                    {
+                        <text>請先停止收集後再匯出資料</text>
+                    }
+                    else if (sessionId == Guid.Empty || recordCount == 0)
+                    {
+                        <text>尚無可匯出的資料</text>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // 每 10 秒輪詢狀態更新
+        setInterval(async function() {
+            try {
+                const response = await fetch('@Url.Action("GetStatus")');
+                const data = await response.json();
+
+                // 更新狀態
+                const statusBadge = document.getElementById('statusBadge');
+                if (data.isRunning) {
+                    statusBadge.className = 'badge bg-success';
+                    statusBadge.textContent = '執行中';
+                } else {
+                    statusBadge.className = 'badge bg-secondary';
+                    statusBadge.textContent = '已停止';
+                }
+
+                // 更新 Session ID
+                const sessionIdDisplay = document.getElementById('sessionIdDisplay');
+                sessionIdDisplay.textContent = data.sessionId ? data.sessionId.substring(0, 8) : '無';
+
+                // 更新開始時間
+                const startTimeDisplay = document.getElementById('startTimeDisplay');
+                startTimeDisplay.textContent = data.sessionStartTime || '未啟動';
+
+                // 更新已收集時間（秒）
+                const durationDisplay = document.getElementById('durationDisplay');
+                if (durationDisplay) {
+                    durationDisplay.textContent = `${data.durationSeconds ?? 0} 秒`;
+                }
+
+                // 更新筆數
+                const recordCountDisplay = document.getElementById('recordCountDisplay');
+                recordCountDisplay.textContent = parseInt(data.recordCount).toLocaleString();
+
+                // 更新選定行政區
+                if (data.selectedAreas && data.selectedAreas.length > 0) {
+                    const selectedAreasDisplay = document.getElementById('selectedAreasDisplay');
+                    if (selectedAreasDisplay) {
+                        selectedAreasDisplay.textContent = data.selectedAreas.join(', ');
+                    }
+                }
+
+                // 更新匯出下拉選單
+                if (data.distinctAreas && data.distinctAreas.length > 0) {
+                    const exportAreas = document.getElementById('exportAreas');
+                    if (exportAreas) {
+                        exportAreas.innerHTML = '';
+                        data.distinctAreas.forEach(area => {
+                            const option = document.createElement('option');
+                            option.value = area;
+                            option.textContent = area;
+                            exportAreas.appendChild(option);
+                        });
+                    }
+                }
+
+                // 若狀態改變則重新載入頁面（以更新控制表單）
+                const currentIsRunning = statusBadge.classList.contains('bg-success');
+                if (currentIsRunning !== data.isRunning) {
+                    location.reload();
+                }
+            } catch (error) {
+                console.error('更新狀態失敗:', error);
+            }
+        }, 10000);
+
+        // 頁面載入時立即更新一次匯出選單
+        (async function() {
+            try {
+                const response = await fetch('@Url.Action("GetStatus")');
+                const data = await response.json();
+                if (data.distinctAreas && data.distinctAreas.length > 0) {
+                    const exportAreas = document.getElementById('exportAreas');
+                    if (exportAreas) {
+                        exportAreas.innerHTML = '';
+                        data.distinctAreas.forEach(area => {
+                            const option = document.createElement('option');
+                            option.value = area;
+                            option.textContent = area;
+                            exportAreas.appendChild(option);
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('初始化匯出選單失敗:', error);
+            }
+        })();
+    </script>
+}

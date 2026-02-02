@@ -1,0 +1,14 @@
+C:\Users\user\.vscode\workspace\user_volte_qos_hour\bin\Debug\net8.0\user_volte_qos_hour.exe
+C:\Users\user\.vscode\workspace\user_volte_qos_hour\bin\Debug\net8.0\user_volte_qos_hour.deps.json
+C:\Users\user\.vscode\workspace\user_volte_qos_hour\bin\Debug\net8.0\user_volte_qos_hour.runtimeconfig.json
+C:\Users\user\.vscode\workspace\user_volte_qos_hour\bin\Debug\net8.0\user_volte_qos_hour.dll
+C:\Users\user\.vscode\workspace\user_volte_qos_hour\bin\Debug\net8.0\user_volte_qos_hour.pdb
+C:\Users\user\.vscode\workspace\user_volte_qos_hour\obj\Debug\net8.0\user_volte_qos_hour.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\user\.vscode\workspace\user_volte_qos_hour\obj\Debug\net8.0\user_volte_qos_hour.AssemblyInfoInputs.cache
+C:\Users\user\.vscode\workspace\user_volte_qos_hour\obj\Debug\net8.0\user_volte_qos_hour.AssemblyInfo.cs
+C:\Users\user\.vscode\workspace\user_volte_qos_hour\obj\Debug\net8.0\user_volte_qos_hour.csproj.CoreCompileInputs.cache
+C:\Users\user\.vscode\workspace\user_volte_qos_hour\obj\Debug\net8.0\user_volte_qos_hour.dll
+C:\Users\user\.vscode\workspace\user_volte_qos_hour\obj\Debug\net8.0\refint\user_volte_qos_hour.dll
+C:\Users\user\.vscode\workspace\user_volte_qos_hour\obj\Debug\net8.0\user_volte_qos_hour.pdb
+C:\Users\user\.vscode\workspace\user_volte_qos_hour\obj\Debug\net8.0\user_volte_qos_hour.genruntimeconfig.cache
+C:\Users\user\.vscode\workspace\user_volte_qos_hour\obj\Debug\net8.0\ref\user_volte_qos_hour.dll

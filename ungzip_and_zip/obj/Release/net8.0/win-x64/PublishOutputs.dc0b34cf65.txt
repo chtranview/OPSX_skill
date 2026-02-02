@@ -1,0 +1,5 @@
+C:\Users\user\.vscode\workspace\ungzip_and_zip\publish\ungzip_and_zip.exe
+C:\Users\user\.vscode\workspace\ungzip_and_zip\publish\ungzip_and_zip.dll
+C:\Users\user\.vscode\workspace\ungzip_and_zip\publish\ungzip_and_zip.deps.json
+C:\Users\user\.vscode\workspace\ungzip_and_zip\publish\ungzip_and_zip.runtimeconfig.json
+C:\Users\user\.vscode\workspace\ungzip_and_zip\publish\ungzip_and_zip.pdb

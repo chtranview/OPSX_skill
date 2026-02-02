@@ -1,0 +1,14 @@
+C:\Users\user\.vscode\workspace\unzip_and_gzip\bin\Debug\net8.0\unzip_and_gzip.exe
+C:\Users\user\.vscode\workspace\unzip_and_gzip\bin\Debug\net8.0\unzip_and_gzip.deps.json
+C:\Users\user\.vscode\workspace\unzip_and_gzip\bin\Debug\net8.0\unzip_and_gzip.runtimeconfig.json
+C:\Users\user\.vscode\workspace\unzip_and_gzip\bin\Debug\net8.0\unzip_and_gzip.dll
+C:\Users\user\.vscode\workspace\unzip_and_gzip\bin\Debug\net8.0\unzip_and_gzip.pdb
+C:\Users\user\.vscode\workspace\unzip_and_gzip\obj\Debug\net8.0\unzip_and_gzip.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\user\.vscode\workspace\unzip_and_gzip\obj\Debug\net8.0\unzip_and_gzip.AssemblyInfoInputs.cache
+C:\Users\user\.vscode\workspace\unzip_and_gzip\obj\Debug\net8.0\unzip_and_gzip.AssemblyInfo.cs
+C:\Users\user\.vscode\workspace\unzip_and_gzip\obj\Debug\net8.0\unzip_and_gzip.csproj.CoreCompileInputs.cache
+C:\Users\user\.vscode\workspace\unzip_and_gzip\obj\Debug\net8.0\unzip_and_gzip.dll
+C:\Users\user\.vscode\workspace\unzip_and_gzip\obj\Debug\net8.0\refint\unzip_and_gzip.dll
+C:\Users\user\.vscode\workspace\unzip_and_gzip\obj\Debug\net8.0\unzip_and_gzip.pdb
+C:\Users\user\.vscode\workspace\unzip_and_gzip\obj\Debug\net8.0\unzip_and_gzip.genruntimeconfig.cache
+C:\Users\user\.vscode\workspace\unzip_and_gzip\obj\Debug\net8.0\ref\unzip_and_gzip.dll

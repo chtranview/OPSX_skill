@@ -1,0 +1,9 @@
+{
+  "markdown.mermaid.enabled": true,
+  "markdown-mermaid.lightModeTheme": "default",
+  "markdown-mermaid.darkModeTheme": "dark",
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false
+  }
+}
