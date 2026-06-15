@@ -10,12 +10,13 @@
 ## 目錄
 
 1. [功能摘要](#1-功能摘要)
-2. [檔案結構](#2-檔案結構)
-3. [快速開始](#3-快速開始)
-4. [指令說明與用法](#4-指令說明與用法)
-5. [完整流程步驟](#5-完整流程步驟)
-6. [Artifacts 結構](#6-artifacts-結構)
-7. [常見問題](#7-常見問題)
+2. [指令速查表](#指令速查表)
+3. [檔案結構](#2-檔案結構)
+4. [快速開始](#3-快速開始)
+5. [指令說明與用法](#4-指令說明與用法)
+6. [完整流程步驟](#5-完整流程步驟)
+7. [Artifacts 結構](#6-artifacts-結構)
+8. [常見問題](#7-常見問題)
 
 ---
 
@@ -33,10 +34,29 @@
 ### 核心特性
 
 - **六指令生命週期** — 入口 `/opsx-sdd` + 探索、提案、實作、驗證、歸檔
-- **零 CLI 依賴** — AI 直接讀寫 `openspec/` 目錄，不需安裝任何工具
+- **零 CLI 依賴** — AI 直接讀寫 `openspec/` 目錄，**不需安裝 OpenSpec 套件**；在 Cursor Chat 輸入 `/opsx-*` 即可使用
 - **自動初始化** — 首次執行時自動建立 `openspec/` 結構
-- **YAML Pipeline 參考** — 每個指令都有對應的 YAML 結構化定義作為補充
+- **YAML Pipeline 參考** — 五個階段指令各有對應 YAML 結構化定義（`/opsx-sdd` 入口直接使用 SKILL.md）
 - **流動式工作流程** — 支援中斷續做、平行變更、跳過可選階段
+
+### 指令速查表
+
+在 Cursor Chat 輸入 `/` 即可選擇以下指令。**無需安裝 OpenSpec CLI**。
+
+| 指令 | 用途 | 用法範例 | 前置條件 |
+|------|------|---------|---------|
+| `/opsx-sdd` | **入口** — 顯示指令路由表，依描述引導下一步 | `/opsx-sdd` 或 `/opsx-sdd 我想開始新功能` | 無 |
+| `/opsx-explore` | **探索** — 思考夥伴；調查問題、比較方案、釐清需求（**不寫程式碼**） | `/opsx-explore` 或 `/opsx-explore 認證系統重構` | 無 |
+| `/opsx-propose` | **提案** — 建立變更並生成 proposal / specs / design / tasks | `/opsx-propose add-user-auth` | 無 |
+| `/opsx-apply` | **實作** — 逐一執行 `tasks.md` 待辦並標記完成 | `/opsx-apply` 或 `/opsx-apply add-user-auth` | `tasks.md` 存在 |
+| `/opsx-verify` | **驗證** — 三維度檢核 Completeness / Correctness / Coherence | `/opsx-verify` 或 `/opsx-verify add-user-auth` | 有 artifacts |
+| `/opsx-archive` | **歸檔** — 同步 delta specs 至主規格並移至 archive | `/opsx-archive` 或 `/opsx-archive add-user-auth` | change 存在 |
+
+**建議路徑：**
+
+- 最小：`/opsx-propose` → `/opsx-apply` → `/opsx-archive`
+- 完整：`/opsx-explore` → `/opsx-propose` → `/opsx-apply` → `/opsx-verify` → `/opsx-archive`
+- 不確定從哪開始：先輸入 `/opsx-sdd`
 
 ---
 
@@ -140,16 +160,18 @@ AI 依照 Skill 指引自動執行整個提案流程：
 
 ## 4. 指令說明與用法
 
+> 六個指令的速查表見上方 [指令速查表](#指令速查表)。以下為各指令的詳細說明。
+
 ### 指令總覽
 
 | 指令 | 用途 | 參數 | 前置條件 |
 |------|------|------|---------|
-| `/opsx-sdd` | 入口指令 — 載入指令路由表，引導選擇正確指令 | 自然語言描述（可選） | 無 |
-| `/opsx-explore` | 探索模式 — 思考、調查、不寫程式碼 | `[topic]`（可選） | 無 |
-| `/opsx-propose` | 建立變更提案並生成 artifacts | `[name]`（kebab-case 或描述） | 無 |
-| `/opsx-apply` | 逐一實作 tasks.md 中的任務 | `[change-name]`（可選） | tasks.md 存在 |
-| `/opsx-verify` | 三維度驗證實作正確性 | `[change-name]`（可選） | 有 artifacts |
-| `/opsx-archive` | 歸檔變更並同步 delta specs | `[change-name]`（可選） | change 存在 |
+| `/opsx-sdd` | 入口 — 顯示路由表並引導選擇正確指令 | 自然語言描述（可選） | 無 |
+| `/opsx-explore` | 探索 — 思考、調查、比較方案（不寫程式碼） | `[topic]`（可選） | 無 |
+| `/opsx-propose` | 提案 — 建立變更並生成 proposal / specs / design / tasks | `[name]`（kebab-case 或描述） | 無 |
+| `/opsx-apply` | 實作 — 逐一執行 tasks.md 中的任務 | `[change-name]`（可選） | tasks.md 存在 |
+| `/opsx-verify` | 驗證 — 三維度檢核實作正確性 | `[change-name]`（可選） | 有 artifacts |
+| `/opsx-archive` | 歸檔 — 同步 delta specs 並移至 archive | `[change-name]`（可選） | change 存在 |
 
 ---
 
