@@ -23,10 +23,10 @@
 
 ## 開始使用Open Spec
 
-### Step 1：開啟 Chat
+### Step 1：開啟新 Chat
 
 開啟 Chat Agent 面板。
 
 ### Step 2：輸入指令
 
-在聊天輸入框中輸入 `/`，會出現可用指令清單。選擇或輸入 `/opsx-propose`：
+在聊天輸入框中輸入 `/opsx-`，會出現可用指令清單。選擇或輸入 `/opsx-propose`：
