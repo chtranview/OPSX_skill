@@ -1,0 +1,161 @@
+# ============================================================
+# opsx-verify.yaml
+# 實作驗證 · 三維度檢核
+# 觸發：使用者輸入 /opsx-verify
+# ============================================================
+
+module_id: opsx-verify
+version: "1.0"
+trigger: "/opsx-verify"
+description: >
+  驗證實作是否符合變更 artifacts。透過三維度檢核 —
+  Completeness（完整性）、Correctness（正確性）、Coherence（一致性）—
+  產生優先順序化的驗證報告，判定是否可進入歸檔。
+
+# ── 輸入參數 ──────────────────────────────────────────────
+inputs:
+  - field: change_name
+    type: string
+    required: false
+    prompt: "要驗證哪個 change？（可留空由系統提示選擇）"
+    resolve_order:
+      - "使用者明確指定"
+      - "從對話脈絡推斷"
+      - "列出有 tasks artifact 的 changes 讓使用者選擇"
+
+# ── 前置條件 ──────────────────────────────────────────────
+depends_on:
+  - module: opsx-apply
+    reads: "openspec/changes/{change_name}/tasks.md"
+    required: false
+    note: "至少需要 tasks.md 才有意義，但可在部分實作時執行"
+
+# ── 驗證維度定義 ──────────────────────────────────────────
+verification_dimensions:
+  completeness:
+    description: "所有任務與需求是否已完成實作"
+    checks:
+      task_completion:
+        description: "tasks.md 中的 checkbox 完成度"
+        severity_if_fail: CRITICAL
+      spec_coverage:
+        description: "delta specs 中的需求是否在程式庫中有對應實作"
+        severity_if_fail: CRITICAL
+
+  correctness:
+    description: "實作是否符合 spec 意圖與場景覆蓋"
+    checks:
+      requirement_mapping:
+        description: "每個需求的實作是否匹配 spec 意圖"
+        severity_if_fail: WARNING
+      scenario_coverage:
+        description: "spec 中的場景是否在程式碼或測試中被涵蓋"
+        severity_if_fail: WARNING
+
+  coherence:
+    description: "實作是否遵循設計決策與專案模式"
+    checks:
+      design_adherence:
+        description: "實作是否遵循 design.md 中的決策"
+        severity_if_fail: WARNING
+      pattern_consistency:
+        description: "新程式碼是否與專案既有模式一致"
+        severity_if_fail: SUGGESTION
+
+# ── Issue 嚴重度定義 ──────────────────────────────────────
+issue_severity:
+  CRITICAL:
+    description: "必須修復才能歸檔"
+    examples: ["未完成的任務", "未實作的需求"]
+  WARNING:
+    description: "建議修復"
+    examples: ["spec/design 與實作的分歧", "未覆蓋的場景"]
+  SUGGESTION:
+    description: "可考慮改善"
+    examples: ["模式不一致", "小幅改進機會"]
+
+# ── 執行邏輯 ──────────────────────────────────────────────
+execution:
+  mode: sequential
+
+  steps:
+    - step: 1
+      action: select_change
+      description: "選取要驗證的 change — 必須由使用者確認"
+      filesystem: "在主工作目錄下讀取 openspec/changes/ 目錄（排除 archive/）"
+      filter: "僅顯示有 tasks artifact 的 changes"
+      mark_in_progress: "(In Progress) 標示有未完成任務的 changes"
+      rule: "不自動選取，必須讓使用者選擇"
+
+    - step: 2
+      action: check_status
+      description: "確認 schema 與可用 artifacts"
+      filesystem: "在主工作目錄下讀取 openspec/changes/{change_name}/.openspec.yaml"
+
+    - step: 3
+      action: load_artifacts
+      description: "載入所有可用的 change artifacts"
+      reads:
+        - "openspec/changes/{change_name}/tasks.md"
+        - "openspec/changes/{change_name}/proposal.md"
+        - "openspec/changes/{change_name}/design.md"
+        - "openspec/changes/{change_name}/specs/"
+
+    - step: 4
+      action: init_report
+      description: "初始化三維度驗證報告結構"
+
+    - step: 5
+      action: verify_completeness
+      description: "驗證完整性 — 任務完成度與需求覆蓋"
+      sub_steps:
+        - check_task_completion: "解析 tasks.md checkbox → 未完成 = CRITICAL"
+        - check_spec_coverage: "搜尋程式庫驗證需求實作 → 未找到 = CRITICAL"
+
+    - step: 6
+      action: verify_correctness
+      description: "驗證正確性 — 實作是否符合 spec 意圖"
+      sub_steps:
+        - check_requirement_mapping: "比對實作與需求意圖 → 分歧 = WARNING"
+        - check_scenario_coverage: "檢查場景覆蓋 → 未覆蓋 = WARNING"
+
+    - step: 7
+      action: verify_coherence
+      description: "驗證一致性 — 設計遵循與模式一致"
+      sub_steps:
+        - check_design_adherence: "比對 design.md 決策 → 矛盾 = WARNING"
+        - check_pattern_consistency: "檢查程式碼模式 → 偏離 = SUGGESTION"
+
+    - step: 8
+      action: generate_report
+      description: "生成驗證報告（摘要表 + 分級 issues + 最終評估）"
+
+# ── 驗證啟發法 ────────────────────────────────────────────
+verification_heuristics:
+  completeness: "聚焦客觀清單項目（checkbox、需求列表）"
+  correctness: "使用關鍵字搜尋、檔案路徑分析、合理推斷"
+  coherence: "尋找明顯不一致，不吹毛求疵"
+  false_positives: "不確定時偏好 SUGGESTION > WARNING > CRITICAL"
+  actionability: "每個 issue 必須有具體建議，含檔案/行號參考"
+
+# ── 優雅降級 ──────────────────────────────────────────────
+graceful_degradation:
+  tasks_only:
+    available: [completeness.task_completion]
+    skipped: [spec_coverage, correctness, coherence]
+  tasks_and_specs:
+    available: [completeness, correctness]
+    skipped: [coherence.design_adherence]
+  full_artifacts:
+    available: [completeness, correctness, coherence]
+    skipped: []
+  always: "註明跳過了哪些檢查及原因"
+
+# ── 護欄 ──────────────────────────────────────────────────
+guardrails:
+  - "不自動選取 change — 必須讓使用者確認"
+  - "每個 issue 必須有具體且可執行的建議"
+  - "程式碼參考使用 file:line 格式"
+  - "不確定時偏好較低嚴重度（避免誤報）"
+  - "不給模糊建議如「考慮檢視一下」"
+  - "永遠註明跳過了哪些檢查及原因"
