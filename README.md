@@ -30,3 +30,34 @@
 ### Step 2：輸入指令
 
 在聊天輸入框中輸入 `/opsx-`，會出現可用指令清單。選擇或輸入 `/opsx-propose`：
+
+```
+/opsx-propose add-user-auth
+```
+
+### Step 3：觀察輸出
+
+AI 依照 Skill 指引自動執行整個提案流程：
+
+```
+┌──────────────────────────────────────────┐
+│  📝 建立變更提案                          │
+│  名稱：add-user-auth                      │
+│  Schema：spec-driven                      │
+└──────────────────────────────────────────┘
+
+  ▶ 確認意圖...
+  ✓ 建立 openspec/changes/add-user-auth/
+  ✓ 寫入 .openspec.yaml
+
+  ▶ 生成 proposal.md...
+  ✓ proposal 已完成
+
+  ▶ 建立 delta specs...
+  ✓ specs/<capability>/spec.md 已生成
+
+  ▶ 生成 design.md...
+  ✓ design 已完成
+
+  ▶ 生成 tasks.md...
+  ✓ tasks 已完成
