@@ -1,0 +1,88 @@
+# ============================================================
+# OpenSpec OPSX Pipeline · _index.yaml
+# 指令路由索引 — 系統總覽與模組對照
+# ============================================================
+
+project:
+  name: OpenSpec_opsx-Pipeline
+  version: "1.0"
+  description: >
+    以 YAML Pipeline 格式定義 OpenSpec OPSX 工作流程。
+    提供從探索、提案、實作、驗證到歸檔的完整變更生命週期管理。
+    AI 直接操作檔案系統管理 openspec/ 目錄結構，不依賴外部 CLI。
+  language: zh-TW
+  author: opsx-sdd
+
+# ── 觸發指令總表 ──────────────────────────────────────────
+commands:
+  /opsx-explore:
+    description: 進入探索模式 — 思考、調查、釐清需求，不實作程式碼
+    calls: opsx-explore
+  /opsx-propose:
+    description: 建立變更提案 — 一步到位生成 proposal / design / tasks
+    calls: opsx-propose
+  /opsx-apply:
+    description: 實作任務 — 逐一執行 tasks.md 中的待辦事項
+    calls: opsx-apply
+  /opsx-verify:
+    description: 驗證實作 — 三維度檢核 Completeness / Correctness / Coherence
+    calls: opsx-verify
+  /opsx-archive:
+    description: 歸檔變更 — 同步 delta specs 並移至 archive
+    calls: opsx-archive
+
+# ── 模組索引 ─────────────────────────────────────────────
+modules:
+  - id: explore
+    file: opsx-explore.yaml
+    role: 探索模式 · 思考夥伴
+  - id: propose
+    file: opsx-propose.yaml
+    role: 變更提案 · 產生 artifacts
+  - id: apply
+    file: opsx-apply.yaml
+    role: 任務實作 · 逐步執行
+  - id: verify
+    file: opsx-verify.yaml
+    role: 實作驗證 · 三維度檢核
+  - id: archive
+    file: opsx-archive.yaml
+    role: 變更歸檔 · delta spec 同步
+
+# ── 工作流程 ─────────────────────────────────────────────
+workflows:
+  core_path:
+    description: 快速路徑（預設）
+    sequence: [explore, propose, apply, archive]
+    note: explore 為可選步驟
+  full_path:
+    description: 完整路徑（含驗證）
+    sequence: [explore, propose, apply, verify, archive]
+
+# ── Artifacts 結構 ────────────────────────────────────────
+artifacts_structure:
+  "openspec/changes/<name>/":
+    ".openspec.yaml": "變更元資料（schema, dates）"
+    "proposal.md": "提案（Intent / Scope / Approach）"
+    "design.md": "技術設計（Architecture / Decisions / Tradeoffs）"
+    "tasks.md": "實作清單（checkbox-based）"
+    "specs/": "Delta specs（ADDED / MODIFIED / REMOVED / RENAMED）"
+  "openspec/changes/archive/": "已歸檔變更（YYYY-MM-DD-<name>/）"
+  "openspec/specs/": "主規格（source of truth）"
+
+# ── 全域設定 ──────────────────────────────────────────────
+global_settings:
+  output_language: zh-TW
+  log_level: info
+  on_error: abort_and_log
+  date_format: "YYYY-MM-DD"
+  encoding: UTF-8
+  schema: spec-driven
+
+# ── 檔案系統操作（無 CLI 依賴） ──────────────────────────
+filesystem_operations:
+  list_changes: "讀取 openspec/changes/ 目錄，排除 archive/ 子目錄"
+  create_change: "建立 openspec/changes/<name>/ 目錄 + .openspec.yaml"
+  check_status: "讀取 .openspec.yaml + 檢查各 artifact 檔案存在"
+  archive_change: "mv openspec/changes/<name> → openspec/changes/archive/YYYY-MM-DD-<name>"
+  sync_specs: "讀取 delta specs → 合併至 openspec/specs/"

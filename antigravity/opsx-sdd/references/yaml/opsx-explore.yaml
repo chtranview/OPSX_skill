@@ -1,0 +1,163 @@
+# ============================================================
+# opsx-explore.yaml
+# 探索模式 · 思考夥伴
+# 觸發：使用者輸入 /opsx-explore
+# ============================================================
+
+module_id: opsx-explore
+version: "1.0"
+trigger: "/opsx-explore"
+description: >
+  進入探索模式 — 一個用於思考、調查和釐清需求的思考夥伴。
+  探索模式禁止寫程式碼或實作功能，僅允許閱讀檔案、搜尋程式碼、
+  調查程式庫，以及建立 OpenSpec artifacts（提案、設計、規格）。
+
+# ── 輸入參數 ──────────────────────────────────────────────
+inputs:
+  - field: topic
+    type: string
+    required: false
+    prompt: "想探索什麼？可以是模糊想法、具體問題、change 名稱、方案比較，或留空直接進入探索模式"
+    examples:
+      - "real-time collaboration"
+      - "the auth system is getting unwieldy"
+      - "add-dark-mode"
+      - "postgres vs sqlite for this"
+
+# ── 前置條件 ──────────────────────────────────────────────
+depends_on: []
+
+# ── 探索立場（Stance） ───────────────────────────────────
+stance:
+  curious: "好奇而非指令式 — 自然產生問題，不照腳本走"
+  open_threads: "開放多條線索 — 讓使用者挑選感興趣的方向，不強迫走單一路徑"
+  visual: "善用 ASCII 圖表 — 系統圖、狀態機、資料流、架構示意、依賴圖、比較表"
+  adaptive: "跟隨有趣的線索，有新資訊時適時轉向"
+  patient: "不急著下結論，讓問題的輪廓自然浮現"
+  grounded: "在實際程式庫中探索，不只是空想理論"
+
+# ── 執行邏輯 ──────────────────────────────────────────────
+execution:
+  mode: interactive
+
+  steps:
+    - step: 1
+      action: check_openspec_context
+      description: "快速確認現有 OpenSpec 狀態"
+      filesystem: "在主工作目錄下讀取 openspec/changes/ 目錄（排除 archive/），列出活躍 changes"
+      reads:
+        - "openspec/changes/"
+        - "openspec/specs/"
+      purpose: >
+        了解是否有 active changes、其名稱、schema 與狀態。
+        若使用者提及特定 change，讀取其 artifacts 作為探索背景。
+
+    - step: 2
+      action: load_change_context
+      description: "若有相關 change，讀取其 artifacts"
+      condition: "使用者提及 change 名稱或偵測到相關 change"
+      reads:
+        - "openspec/changes/<name>/proposal.md"
+        - "openspec/changes/<name>/design.md"
+        - "openspec/changes/<name>/tasks.md"
+        - "openspec/changes/<name>/specs/"
+      purpose: >
+        在對話中自然引用既有 artifacts，
+        例如：「你的設計提到用 Redis，但我們剛發現 SQLite 更適合…」
+
+    - step: 3
+      action: enter_explore_mode
+      description: "進入探索模式 — 依使用者帶來的內容靈活回應"
+      capabilities:
+        explore_problem_space:
+          - "問釐清問題"
+          - "挑戰假設"
+          - "重構問題框架"
+          - "尋找類比"
+        investigate_codebase:
+          - "繪製與討論相關的既有架構"
+          - "找出整合點"
+          - "辨識已在使用的模式"
+          - "揭露隱藏的複雜度"
+        compare_options:
+          - "腦力激盪多種方案"
+          - "建立比較表"
+          - "勾勒取捨"
+          - "推薦方向（若被問到）"
+        visualize:
+          - "系統架構圖"
+          - "狀態機圖"
+          - "資料流圖"
+          - "依賴圖"
+          - "比較表"
+        surface_risks:
+          - "辨識可能出錯的地方"
+          - "找出理解上的缺口"
+          - "建議 spike 或調查方向"
+
+    - step: 4
+      action: offer_capture
+      description: "當洞察結晶時，提議捕捉到適當的 artifact"
+      condition: "使用者做出決策或洞察明確化時"
+      capture_mapping:
+        new_requirement: "specs/<capability>/spec.md"
+        requirement_changed: "specs/<capability>/spec.md"
+        design_decision: "design.md"
+        scope_changed: "proposal.md"
+        new_work_identified: "tasks.md"
+        assumption_invalidated: "相關 artifact"
+      rule: "永遠先提議，由使用者決定 — 不自動捕捉"
+
+    - step: 5
+      action: offer_next_step
+      description: "探索趨於成熟時，建議可能的下一步"
+      options:
+        - "想法夠成熟了，要建立變更提案嗎？→ /opsx-propose"
+        - "已更新 artifact → 顯示變更摘要"
+        - "使用者已得到需要的資訊 → 結束探索"
+        - "稍後再繼續 → 隨時可以探索"
+
+# ── 輸出 ──────────────────────────────────────────────────
+outputs:
+  required: []
+  optional:
+    - description: "探索摘要（若探索趨於結論）"
+      format: |
+        ## 我們發現了什麼
+
+        **問題**：[結晶化的理解]
+        **方案**：[若已浮現]
+        **開放問題**：[若仍有]
+        **下一步**（若準備好）：
+        - 建立變更提案 → /opsx-propose
+        - 繼續探索 → 繼續對話
+    - description: "artifact 更新（若使用者同意捕捉洞察）"
+      paths:
+        - "openspec/changes/<name>/proposal.md"
+        - "openspec/changes/<name>/design.md"
+        - "openspec/changes/<name>/tasks.md"
+        - "openspec/changes/<name>/specs/<capability>/spec.md"
+
+# ── 護欄 ──────────────────────────────────────────────────
+guardrails:
+  forbidden:
+    - "撰寫程式碼或實作功能（建立 OpenSpec artifacts 允許）"
+    - "自動捕捉洞察（必須先提議由使用者決定）"
+    - "假裝理解（不清楚就深入挖掘）"
+    - "急著下結論（探索是思考時間，不是任務時間）"
+    - "強制結構化（讓模式自然浮現）"
+  encouraged:
+    - "大量使用 ASCII 圖表視覺化"
+    - "在實際程式庫中探索，不只空想"
+    - "質疑假設 — 包括使用者的和自己的"
+    - "跟隨有趣的插曲（若有價值）"
+    - "耐心等待問題輪廓浮現"
+
+# ── 錯誤處理 ──────────────────────────────────────────────
+error_handling:
+  no_openspec_context:
+    action: "無 OpenSpec 狀態也可自由思考，不強制需要 change"
+  change_not_found:
+    action: "告知使用者找不到指定 change，列出可用選項"
+  user_requests_implementation:
+    action: "提醒使用者離開探索模式，先建立變更提案（/opsx-propose）"
