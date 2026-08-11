@@ -2,6 +2,17 @@
   "markdown.mermaid.enabled": true,
   "markdown-mermaid.lightModeTheme": "default",
   "markdown-mermaid.darkModeTheme": "dark",
+  "terminal.integrated.profiles.windows": {
+    "pwsh UTF-8": {
+      "path": "pwsh.exe",
+      "args": [
+        "-NoExit",
+        "-Command",
+        "[Console]::InputEncoding=[System.Text.UTF8Encoding]::new($false); [Console]::OutputEncoding=[System.Text.UTF8Encoding]::new($false); $OutputEncoding=[System.Text.UTF8Encoding]::new($false); chcp 65001 > $null"
+      ]
+    }
+  },
+  "terminal.integrated.defaultProfile.windows": "pwsh UTF-8",
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": false

@@ -1,0 +1,34 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../Downloads/ExpertAI_Course_Engine"
+		}
+	],
+	"settings": {
+		"markdown-mermaid.lightModeTheme": "default",
+		"markdown-mermaid.darkModeTheme": "dark",
+		"terminal.integrated.profiles.windows": {
+			"pwsh UTF-8": {
+				"path": "pwsh.exe",
+				"args": [
+					"-NoExit",
+					"-Command",
+					"[Console]::InputEncoding=[System.Text.UTF8Encoding]::new($false); [Console]::OutputEncoding=[System.Text.UTF8Encoding]::new($false); $OutputEncoding=[System.Text.UTF8Encoding]::new($false); chcp 65001 > $null"
+				]
+			}
+		},
+		"terminal.integrated.defaultProfile.windows": "pwsh UTF-8",
+		"chat.tools.terminal.autoApprove": {
+			"dotnet new": true,
+			"dotnet restore": true,
+			"dotnet add": true,
+			"/^python -c \"import sqlite3; db_path = 'c:/Users/user/\\.gemini/antigravity/workspace/pmp_pipeline/pmp-exam-pool\\.db'; conn = sqlite3\\.connect\\(db_path\\); cur = conn\\.cursor\\(\\); cur\\.execute\\('SELECT option_key, option_en, option_zh, is_correct FROM options WHERE question_id=1929'\\); print\\(cur\\.fetchall\\(\\)\\);\"$/": {
+				"approve": true,
+				"matchCommandLine": true
+			}
+		}
+	}
+}
