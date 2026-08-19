@@ -4,14 +4,14 @@
 
 - 把opsx-sdd目錄複製至 C:\Users\<用戶名>\.vscode\workspace\\.github\skills\ 目錄下
 
-- 把prompt目錄複製至 C:\Users\<用戶名>\.vscode\workspace\.github\ 目錄下
+- 把prompt目錄複製至 C:\Users\<用戶名>\.vscode\workspace\\.github\ 目錄下
 
 
 ## 目錄 2.Antigravity
 
-- 把opsx-sdd目錄複製至 C:\Users\<用戶名>\.gemini\antigravity\workspace\.agent\skills\ 目錄下
+- 把opsx-sdd目錄複製至 C:\Users\<用戶名>\.gemini\antigravity\workspace\\.agent\skills\ 目錄下
 
-- 把workflows目錄複製至 C:\Users\<用戶名>\.gemini\antigravity\workspace\.agent\ 目錄下
+- 把workflows目錄複製至 C:\Users\<用戶名>\.gemini\antigravity\workspace\\.agent\ 目錄下
 
 
 ## 目錄 3.Cursor
